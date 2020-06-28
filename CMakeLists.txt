@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(CppPlayground)
+enable_testing()
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
+
+FILE (GLOB testSources *.cpp)
+FOREACH( testSource ${testSources} )
+  GET_FILENAME_COMPONENT( filename ${testSource} NAME_WE )
+  add_executable( ${filename} ${filename}.cpp )
+  target_compile_features( ${filename} PRIVATE cxx_std_20 )
+  target_link_libraries( ${filename} CONAN_PKG::catch2)
+  message(${CMAKE_CURRENT_BINARY_DIR})
+  add_test( ${filename} ${CMAKE_CURRENT_BINARY_DIR}/bin/${filename} )
+ENDFOREACH()
